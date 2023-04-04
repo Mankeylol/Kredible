@@ -17,6 +17,5 @@ export const NftSVG: FC<{username: string, score: string}> = ({username, score})
 </radialGradient>
 </defs>
 </svg>
-
   )
 }

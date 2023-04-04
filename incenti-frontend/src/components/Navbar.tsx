@@ -8,7 +8,7 @@ export default function Navbar() {
   <>
   <div className='navbar'>
     <div>
-        <h1 className='heading-text'>Incenti</h1>
+        <h1 className='heading-text'>Credable</h1>
     </div>
 
     <div className='wallet-btn'>
