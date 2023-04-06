@@ -1,15 +1,17 @@
 import { useWallet, } from '@solana/wallet-adapter-react';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { NftSVG } from './NftSVG';
+import axios from 'axios'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
-const { RestClient, NftMintsByOwnerRequest } = require("@hellomoon/api");
     const solanaWeb3 = require('@solana/web3.js');
     const endpoint = 'https://solana-mainnet.g.alchemy.com/v2/FG8gabHTRpZujrxEb_rQKlldhhXftzlK';
     const solanaConnection = new solanaWeb3.Connection(endpoint);
-    const client = new RestClient("f9322af6-68dd-4cce-a894-76bf23a0a005");
+    let totalNftValue: number = 0
 
 export default function GetScore() {
 
+    const [nftValue, setNftsValue] = useState(0)
     const {publicKey} = useWallet();
     const walletAddress : string = publicKey?.toBase58()!
 
@@ -29,20 +31,50 @@ export default function GetScore() {
         }
         getTransactions()
 
-        const run = async () => {
-          const ownerAccount = "7kwYu6tRQnrzkasijjFiPGCYRsMnbQAvETPWXrtmq5NG";
-        
-          const response = await client.send(
-            new NftMintsByOwnerRequest({
-              ownerAccount,
-            })
-          );
-          console.log({ response });
-        };
-        
-        run().then(console.log).catch(console.log);
-      }
+        const getNftFloor = async () => {
+    
+          const options = {
+        method: 'POST',
+        url: 'https://rest-api.hellomoon.io/v0/nft/mints-by-owner',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          authorization: 'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+        },
+        data: {ownerAccount: walletAddress}
+      };
+      
+         const nfts = await axios.request(options);
+         const nftData = nfts.data
+         const len = nftData.data.length
 
+         for (let i = 0; i < 3; i++) {
+          const collectionId = nftData.data[i].helloMoonCollectionId
+          const nftFloor = async () => {
+    
+            const options = {
+          method: 'POST',
+          url: 'https://rest-api.hellomoon.io/v0/nft/collection/floorprice',
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            authorization: 'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+          },
+          data: {helloMoonCollectionId: collectionId}
+        }
+        const floorPrice = await axios.request(options);
+        const nftValue = floorPrice.data.data[0].floorPriceLamports/LAMPORTS_PER_SOL
+        console.log(nftValue)
+        totalNftValue += nftValue
+        console.log(totalNftValue)
+         }
+         let totalNftsvalue = nftFloor()
+         setNftsValue(totalNftValue)
+        }
+      };
+        getNftFloor()
+      }
+      
   return (
     <div className='credit-score-container'>
         <h3>Get your on-chain credit score</h3>
