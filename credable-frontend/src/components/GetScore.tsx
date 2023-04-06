@@ -74,7 +74,7 @@ export default function GetScore() {
       };
         getNftFloor()
       }
-      
+      console.log(nftValue)
   return (
     <div className='credit-score-container'>
         <h3>Get your on-chain credit score</h3>
