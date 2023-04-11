@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-export const NftSVG: FC<{username: string, score: string}> = ({username, score})=>{
+export const NftSVG: FC<{username: string, score: number}> = ({username, score})=>{
   return (
     <svg width="300" height="500" viewBox="0 0 300 500" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="300" height="500" fill="#28282B"/>
