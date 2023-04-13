@@ -23,8 +23,6 @@
     "bs58": "^5.0.0",
     "cross-fetch": "^3.1.5",
     "crypto": "^1.0.1",
-    "html2canvas": "^1.4.1",
-    "puppeteer": "^19.8.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
