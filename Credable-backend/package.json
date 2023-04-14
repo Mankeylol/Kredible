@@ -14,6 +14,7 @@
     "@metaplex-foundation/js": "^0.18.3",
     "@solana/web3.js": "^1.75.0",
     "bigint-buffer": "^1.1.5",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",

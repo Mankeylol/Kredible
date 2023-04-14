@@ -4,9 +4,11 @@ import { NftSVG } from './NftSVG';
 import axios from 'axios'
 import { LAMPORTS_PER_SOL, Connection, PublicKey, StakeProgram, ParsedInstruction } from '@solana/web3.js';
 import MintNFT from './MintNFT'
+import * as dotenv from 'dotenv';
 
+const bearer = process.env.BEARER
 const solanaWeb3 = require('@solana/web3.js');
-const endpoint = 'https://solana-mainnet.g.alchemy.com/v2/FG8gabHTRpZujrxEb_rQKlldhhXftzlK';
+const endpoint =  process.env["RPC_ENDPOINT_URL"]! ;
 const solanaConnection = new solanaWeb3.Connection(endpoint);
 let totalNftValue: number = 0
 
@@ -27,6 +29,7 @@ export default function GetScore() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
     console.log(event.target);
+    
   };
   function getScore() {
     const getTransactions = async () => {
@@ -45,7 +48,7 @@ export default function GetScore() {
         headers: {
           accept: 'application/json',
           'content-type': 'application/json',
-          authorization: 'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+          authorization:  bearer
         },
         data: { ownerAccount: walletAddress }
       };
@@ -65,7 +68,7 @@ export default function GetScore() {
             headers: {
               accept: 'application/json',
               'content-type': 'application/json',
-              authorization: 'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+              authorization:  bearer
             },
             data: { helloMoonCollectionId: collectionId }
           }
@@ -91,7 +94,7 @@ export default function GetScore() {
           headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            authorization: 'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+            authorization:  bearer
           },
           data: { ownerAccount: walletAddress }
         }
@@ -178,13 +181,12 @@ export default function GetScore() {
       <h3>Get your on-chain credit score</h3>
       <div className='main-container'>
         <NftSVG username={username} score={score} />
-        <div className='main-form' style={{ display: visibility ? "" : "none" }}>
-          <input type="text" onChange={handleChange} id='name' value={username} required />
+       {(visibility) ?  <div className='main-form' style={{ display: visibility ? "" : "none" }}>
+          <input className='input' type="text" onChange={handleChange} id='name' value={username} required />
           <button disabled={!publicKey} className="getDataBtn" onClick={mintNft}>
             Get score
           </button>
-        </div>
-        <MintNFT/>
+        </div>:  <MintNFT username ={username} score ={score}/>}
       </div>
     </div>
   )
