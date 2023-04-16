@@ -83,7 +83,7 @@ async function mintNftController( request, response) {
    
 
     const keypair = Keypair.fromSecretKey(
-        new Uint8Array(process.env.PRIVATE_KEY)
+        new Uint8Array([228,252,71,40,185,159,47,71,216,100,105,210,198,177,136,23,156,85,116,180,244,136,78,111,147,165,42,19,142,251,166,57,156,134,203,201,6,226,141,186,150,111,175,216,215,12,187,37,64,89,89,183,176,30,145,221,62,200,119,134,66,33,135,43])
     );
     console.log(keypair.publicKey)
 

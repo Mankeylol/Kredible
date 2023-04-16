@@ -6,9 +6,9 @@ import { LAMPORTS_PER_SOL, Connection, PublicKey, StakeProgram, ParsedInstructio
 import MintNFT from './MintNFT'
 import * as dotenv from 'dotenv';
 
-const bearer = process.env.BEARER
+
 const solanaWeb3 = require('@solana/web3.js');
-const endpoint =  process.env["RPC_ENDPOINT_URL"]! ;
+const endpoint = "https://solana-mainnet.g.alchemy.com/v2/FG8gabHTRpZujrxEb_rQKlldhhXftzlK" ;
 const solanaConnection = new solanaWeb3.Connection(endpoint);
 let totalNftValue: number = 0
 
@@ -48,7 +48,7 @@ export default function GetScore() {
         headers: {
           accept: 'application/json',
           'content-type': 'application/json',
-          authorization:  bearer
+          authorization:   'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
         },
         data: { ownerAccount: walletAddress }
       };
@@ -68,7 +68,7 @@ export default function GetScore() {
             headers: {
               accept: 'application/json',
               'content-type': 'application/json',
-              authorization:  bearer
+              authorization:   'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
             },
             data: { helloMoonCollectionId: collectionId }
           }
@@ -94,7 +94,7 @@ export default function GetScore() {
           headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            authorization:  bearer
+            authorization:   'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
           },
           data: { ownerAccount: walletAddress }
         }
