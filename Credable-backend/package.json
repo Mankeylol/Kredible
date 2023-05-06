@@ -11,8 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hellomoon/api": "^1.15.0-alpha.19",
     "@metaplex-foundation/js": "^0.18.3",
     "@solana/web3.js": "^1.75.0",
+    "axios": "^1.4.0",
     "bigint-buffer": "^1.1.5",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
