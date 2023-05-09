@@ -124,13 +124,13 @@ async function mintNftController( request, response) {
 }
 
 async function calculateScore(request, response) {
+  const {walletAddress} = request.body
+  console.log(walletAddress) 
     /* let floorPrice = 0
     let nftValue = 0
     let totalTxs = 0
-    const walletAddress = "5PTzRVufPqm3M3xTxq2AAkPhq1XxhmrW6LgQBunxJFvS" /*request.body
+    const walletAddress = "5PTzRVufPqm3M3xTxq2AAkPhq1XxhmrW6LgQBunxJFvS" 
 
-
-    //Gets all the Nfts in the 
     const getNfts = async () => {
 
         let totalFloor = 0
@@ -310,7 +310,9 @@ async function calculateScore(request, response) {
         return totalvalue
       }
 
-      getTokenValue() */
+      let tokenValue = await getTokenValue()
+
+      console.log(tokenValue)
 
       async function getStakeAccountInfo(){
         const options = {
@@ -328,9 +330,73 @@ async function calculateScore(request, response) {
           console.log(stakeAccounts.data.data)
       }
 
-      getStakeAccountInfo()
+      let stakeAccInfo = await getStakeAccountInfo()
+      console.log(stakeAccInfo) */
+
+      /* async function lendingHistoryInfo (){
+        const lenderWallet = "8quVxKzc21GybehhMKwhiuuVks9eg1carGoBUuqpZJ1a"
+
+        const sharkyLoans = {
+            method: 'POST',
+            url: 'https://rest-api.hellomoon.io/v0/sharky/loan-events',
+            headers: {
+              accept: 'application/json',
+              'content-type': 'application/json',
+              authorization:   'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+            },
+            data: { lender: lenderWallet }
+          };
+          const sharkyLendingHistory = await axios.request(sharkyLoans)
+          console.log(sharkyLendingHistory.data.data)
+
+          const citrusLoans = {
+            method: 'POST',
+            url: 'https://rest-api.hellomoon.io/v0/sharky/loan-events',
+            headers: {
+              accept: 'application/json',
+              'content-type': 'application/json',
+              authorization:   'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+            },
+            data: { lender: lenderWallet }
+          };
+          const citrusLendingHistory = await axios.request(citrusLoans)
+          console.log(citrusLendingHistory.data.data)
+      }
+      lendingHistoryInfo()
+ */
+    response.status(200).send(`POST request received ${walletAddress}`)
+
+      async function borrowingHistoryInfo (){
+        const borrowerWallet = "8quVxKzc21GybehhMKwhiuuVks9eg1carGoBUuqpZJ1a"
+
+        const sharkyLoans = {
+            method: 'POST',
+            url: 'https://rest-api.hellomoon.io/v0/sharky/loan-events',
+            headers: {
+              accept: 'application/json',
+              'content-type': 'application/json',
+              authorization:   'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+            },
+            data: { borrower: borrowerWallet }
+          };
+          const sharkyBorrowingHistory = await axios.request(sharkyLoans)
+          console.log(sharkyBorrowingHistory.data.data)
+
+           const citrusLoans = {
+            method: 'POST',
+            url: 'https://rest-api.hellomoon.io/v0/sharky/loan-events',
+            headers: {
+              accept: 'application/json',
+              'content-type': 'application/json',
+              authorization:   'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
+            },
+            data: { borrower: borrowerWallet }
+          };
+          const citrusBorrowingHistory = await axios.request(citrusLoans)
+          console.log(citrusBorrowingHistory.data.data)
+      }
+      console.log(borrowingHistoryInfo())
 }
-calculateScore()
 
 
 
