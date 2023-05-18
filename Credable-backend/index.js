@@ -5,17 +5,17 @@ import {
   Metaplex, toMetaplexFile, bundlrStorage,
   keypairIdentity,
 } from "@metaplex-foundation/js";
-import { Connection, clusterApiUrl, Keypair,} from "@solana/web3.js";
+import { Connection, clusterApiUrl, Keypair, } from "@solana/web3.js";
 import fs from "fs"
 import express from 'express'
 import cors from 'cors'
 
-import { getNfts } from "./getNftFloor.js";
 import { getTransactions } from "./getTx.js";
-import { getTokensPrice } from "./getTokensValue.js";
+import { getFloor } from "./getNftFloorBatched.js";
 import { getStakeAccountInfo } from "./getStakingInfo.js";
 import { lendingHistoryInfo } from "./GetlendingHistory.js";
 import { borrowingHistoryInfo } from "./getBorrowingHistory.js";
+import { getPrices } from "./getToken.js";
 
 
 
@@ -131,33 +131,115 @@ async function mintNftController(request, response) {
 }
 
 async function calculateScore(request, response) {
+
   const { walletAddress } = request.body
 
+  const [totalTxs, nftValue, tokensValue, stakingInfo, amountLent, amountBorrowed ] = await Promise.all([getTransactions(walletAddress),getFloor(walletAddress),getPrices(walletAddress), getStakeAccountInfo(walletAddress),lendingHistoryInfo(walletAddress),borrowingHistoryInfo(walletAddress)])
 
-  console.log(walletAddress)
+  fs.writeFileSync("./test.json", JSON.stringify(totalTxs, nftValue, tokensValue, stakingInfo, amountLent, amountBorrowed));
 
-  let totalTxs = await getTransactions(walletAddress)
-  console.log(totalTxs)
-  console.log(totalTxs.length)
 
-  const nftValue = await getNfts(walletAddress)
-  console.log("final NFTs value", nftValue)
+  let score = 0;
 
-  let tokensValue = await getTokensPrice(walletAddress)
+  let txScore
+  if (totalTxs.length <= 0) {
 
-  console.log(tokensValue)
+    txScore = 30
 
-  let stakingInfo = getStakeAccountInfo(walletAddress)
-  console.log(stakingInfo)
+  } else if (totalTxs.length <= 200) {
+    txScore = 30 + (totalTxs.length / 200) * 20;
+  } else if (totalTxs.length <= 1000) {
+    txScore = 50 + ((totalTxs.length - 200) / 800) * 30;
+  } else if (totalTxs.length <= 2000) {
+    txScore = 80 + ((totalTxs.length - 1000) / 1000) * 10;
+  } else {
+    txScore = 90;
+  }
+  score += txScore
 
-  let amountLent = await lendingHistoryInfo()
-  console.log(amountLent)
+  let nftScore = 0;
 
-  let amountBorrowed = await borrowingHistoryInfo(walletAddress)
+  if (nftValue <= 0) {
+    nftScore = 34;
+  } else if (nftValue <= 100) {
+    nftScore = 34 + (nftValue / 100) * 30
+  } else if (nftValue <= 1000) {
+    nftScore = 64 + ((nftValue - 100) / 900) * 15
+  } else if (nftValue <= 2000) {
+    nftScore = 79 + ((nftValue - 1000) / 1000) * 21
+  } else {
+    nftScore = 100
+  }
+  score += nftScore
 
-  console.log(amountBorrowed)
+  let tokenscore = 0
 
+  if (tokensValue <= 0) {
+    tokenscore = 50
+  } else if (tokensValue <= 1000) {
+    tokenscore = 50 + (tokensValue / 1000) * 50
+  } else if (tokensValue <= 5000) {
+    tokenscore = 100 + ((tokensValue - 1000) / 4000) * 30
+  } else if (tokensValue <= 50000) {
+    tokenscore = 130 + ((tokensValue - 5000) / 45000) * 20
+  } else {
+    tokenscore = 150
+  }
+  score += tokenscore
+
+  let stakeScore = 0
+  if (stakingInfo <= 0) {
+    stakeScore = 66
+  } else if (stakingInfo <= 100) {
+    stakeScore = 66 + (stakingInfo / 100) * 30
+  } else if (stakingInfo <= 500) {
+    stakeScore = 96 + ((stakingInfo - 100) / 400) * 30
+  } else if (stakingInfo <= 2500) {
+    stakeScore = 126 + ((stakingInfo - 500) / 2000) * 30
+  } else if (stakingInfo <= 10000) {
+    stakeScore = 156 + ((stakingInfo - 2500) / 7500) * 44
+  } else {
+    stakeScore = 200
+  }
+
+  score += stakeScore
+
+  let lendingScore = 0;
+  if (amountLent <= 0) {
+    lendingScore = 54
+  } else if (amountLent <= 200) {
+    lendingScore = 54 + (amountLent / 200) * 50
+  } else if (amountLent <= 1800) {
+    lendingScore = 104 + ((amountLent - 200) / 2000) * 56
+  } else {
+    lendingScore = 160
+  }
+
+  score += lendingScore
+
+  
+
+
+  let borrowingScore = 0;
+
+  if (amountBorrowed <= 0) {
+    borrowingScore = 66
+  } else if (amountBorrowed <= 300) {
+    borrowingScore = 66 + (amountBorrowed / 300) * 50
+  } else if (amountBorrowed <= 5000) {
+    borrowingScore = 104 + ((amountBorrowed - 300) / 5000) * 84
+  } else {
+    borrowingScore = 200
+  }
+
+  score += borrowingScore
+
+  Math.floor(score)
+
+  console.log(score)
   response.status(200).send(`POST request received`)
+
+  return score
 }
 
 app.use(cors())
