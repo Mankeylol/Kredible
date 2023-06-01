@@ -1,7 +1,11 @@
 import axios from "axios";
 
+export async function getPrices (walletAddress) {
 
-export async function getTokensPrice (walletAddress) {
+    let usdValue = 0;
+
+    const coinIds = []
+
     const getAllTokens = async () => {
 
         const options = {
@@ -24,7 +28,8 @@ export async function getTokensPrice (walletAddress) {
     
       async function getFungibleTokens() {
         const getNfts = async () => {
-    
+
+            let walletAddress = "5PTzRVufPqm3M3xTxq2AAkPhq1XxhmrW6LgQBunxJFvS"
     
           const options = {
             method: 'POST',
@@ -63,48 +68,42 @@ export async function getTokensPrice (walletAddress) {
     
       let tokens = await getFungibleTokens()
       console.log(tokens.data.length)
-    
-      async function getTokenValue() {
-    
-        let totalvalue = 0
-    
-        try {
-          for (let i = 0; i < tokens.data.length; i++) {
-            let mintAddress = tokens.data[i].mint
-            const options = {
-              method: 'POST',
-              url: 'https://rest-api.hellomoon.io/v0/token/price',
-              headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                authorization: 'Bearer f9322af6-68dd-4cce-a894-76bf23a0a005'
-              },
-              data: { mint: mintAddress }
-            };
-    
-            const tokenPrice = await axios.request(options);
-    
-            if (tokenPrice.data.data[0]) {
-              if (mintAddress === "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" || mintAddress == "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB") {
-                console.log(tokens.data[i].amount)
-                totalvalue += tokens.data[i].amount / 1000000
-              }
-              totalvalue += (tokenPrice.data.data[0].price / 1000000000000000) * tokens.data[i].amount
-            } else {
-              totalvalue += 0
-            }
-    
-    
-    
-          }
-        } catch (error) {
-          console.log(error)
-        }
-    
-        return totalvalue
-      }
-    
-      let tokenValue = await getTokenValue()
 
-      return tokenValue
+      for (let i = 0; i < tokens.data.length; i++) {
+        coinIds.push(tokens.data[i].mint)
+      }
+
+    const currency = 'usd'
+
+    const options = {
+        method: 'GET',
+      url: 'https://api.coingecko.com/api/v3/simple/token_price/solana',
+      headers: {
+        accept: 'application/json',
+      },
+      params: { contract_addresses:coinIds , vs_currencies: currency }
+    }
+
+     const price = await axios.request(options)
+
+
+    for (const [key, value] of Object.entries(price.data)) {
+        for (let i = 0; i < tokens.data.length; i++) {
+            if (key == tokens.data[i].mint) {
+                if (key == "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB" || key == "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" ) {
+                    usdValue += (tokens.data[i].amount/ 1000000) * value.usd 
+                }
+                usdValue += (tokens.data[i].amount/ 1000000000) * value.usd 
+            }
+            
+        }
+      }
+
+
+console.log(usdValue);
+
+    for (let i = 0; i < price.data.length; i++) {
+        
+    }
+    return usdValue;
 }

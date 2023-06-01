@@ -6,5 +6,5 @@ export const getTransactions = async (walletAddress) => {
     const pubKey = new solanaWeb3.PublicKey(walletAddress);
 
     let transactionList = await solanaConnection.getSignaturesForAddress(pubKey); 
-    return transactionList
+    return transactionList.length
   }

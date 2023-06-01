@@ -16,7 +16,7 @@ export async function borrowingHistoryInfo (walletAddress){
         data: { borrower: borrowerWallet }
       };
       const sharkyBorrowingHistory = await axios.request(sharkyLoans)
-      console.log(sharkyBorrowingHistory.data.data)
+
 
       let sharkyData = sharkyBorrowingHistory.data.data
 
@@ -37,7 +37,6 @@ export async function borrowingHistoryInfo (walletAddress){
         data: { borrower: borrowerWallet }
       };
       const citrusBorrowingHistory = await axios.request(citrusLoans)
-      console.log(citrusBorrowingHistory.data.data)
 
       let citrusData = citrusBorrowingHistory.data.data
 

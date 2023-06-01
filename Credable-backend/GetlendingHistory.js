@@ -14,7 +14,7 @@ import axios from "axios";
         data: { lender: lenderWallet }
       };
       const sharkyLendingHistory = await axios.request(sharkyLoans)
-      console.log(sharkyLendingHistory.data.data)
+
 
       let sharkyData = sharkyLendingHistory.data.data
 
@@ -34,7 +34,6 @@ import axios from "axios";
         data: { lender: lenderWallet }
       };
       const citrusLendingHistory = await axios.request(citrusLoans)
-      console.log(citrusLendingHistory.data.data)
 
       let citrusData = citrusLendingHistory.data.data
 

@@ -29,7 +29,6 @@ export const getNfts = async (walletAddress) => {
       try {
         for (let i = 0; i < Nft_array_length; i++) {
           let collectionId = nftData.data[i].helloMoonCollectionId;
-          console.log(collectionId)
           const options = {
             method: 'POST',
             url: 'https://rest-api.hellomoon.io/v0/nft/collection/floorprice',

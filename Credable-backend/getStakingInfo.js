@@ -15,7 +15,6 @@ export async function getStakeAccountInfo(walletAddress) {
 
     const stakeAccounts = await axios.request(options)
     let stakeArray = stakeAccounts.data.data
-    console.log(stakeArray)
     let len = stakeArray.length
     let stakeValue = 0
 
