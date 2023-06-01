@@ -105,4 +105,5 @@ console.log(usdValue);
     for (let i = 0; i < price.data.length; i++) {
         
     }
+    return usdValue;
 }

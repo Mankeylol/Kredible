@@ -9,6 +9,7 @@ import { Connection, clusterApiUrl, Keypair, } from "@solana/web3.js";
 import fs from "fs"
 import express from 'express'
 import cors from 'cors'
+import { MongoClient } from "mongodb";
 
 import { getTransactions } from "./getTx.js";
 import { getFloor } from "./getNftFloorBatched.js";
@@ -16,11 +17,17 @@ import { getStakeAccountInfo } from "./getStakingInfo.js";
 import { lendingHistoryInfo } from "./GetlendingHistory.js";
 import { borrowingHistoryInfo } from "./getBorrowingHistory.js";
 import { getPrices } from "./getToken.js";
+import { mintNft } from "./CreateNft.js";
+import { getNftVolume } from "./getNftVolume.js";
+import { uri } from "./mongoDb.js";
+import { addDoc } from "./mongoDb.js";
+import { getBorrowingActivity } from "./getDefiBorrowingHistory.js";
 
 
 
 const app = express()
 const PORT = 8080;
+
 
 
 const { stdout: chromiumPath } = await promisify(exec)("which chromium")
@@ -134,15 +141,14 @@ async function calculateScore(request, response) {
 
   const { walletAddress } = request.body
 
-  const [totalTxs, nftValue, tokensValue, stakingInfo, amountLent, amountBorrowed ] = await Promise.all([getTransactions(walletAddress),getFloor(walletAddress),getPrices(walletAddress), getStakeAccountInfo(walletAddress),lendingHistoryInfo(walletAddress),borrowingHistoryInfo(walletAddress)])
+  const [totalTxs, nftValue, tokensValue, stakingInfo, amountLent, amountBorrowed, nftVolume, defiBorrowingHistory ] = await Promise.all([getTransactions(walletAddress),getFloor(walletAddress),getPrices(walletAddress), getStakeAccountInfo(walletAddress),lendingHistoryInfo(walletAddress),borrowingHistoryInfo(walletAddress), getNftVolume(walletAddress), getBorrowingActivity(walletAddress)])
 
-  fs.writeFileSync("./test.json", JSON.stringify(totalTxs, nftValue, tokensValue, stakingInfo, amountLent, amountBorrowed));
 
 
   let score = 0;
 
   let txScore
-  if (totalTxs.length <= 0) {
+  if (totalTxs <= 0) {
 
     txScore = 30
 
@@ -234,10 +240,25 @@ async function calculateScore(request, response) {
 
   score += borrowingScore
 
-  Math.floor(score)
+  score = Math.floor(score)
 
   console.log(score)
-  response.status(200).send(`POST request received`)
+  const data = [totalTxs, nftValue, tokensValue, stakingInfo, amountLent, amountBorrowed, nftVolume, defiBorrowingHistory ]
+  response.status(200).send(`POST request received${console.log(data)}`)
+
+  async function storeData(){
+    const client = new MongoClient(uri);
+    try {
+      await client.connect();
+      await addDoc(client,{walletAddress: walletAddress, score: score, data:data
+      })
+  } catch (error) {
+      console.error(error)
+  } finally {
+      await client.close()
+  }
+  }
+  storeData()
 
   return score
 }
@@ -250,5 +271,7 @@ app.post('/calculateScore',
 
 app.post('/mintnft',
   mintNftController)
+
+  app.post('test', mintNft)
 
 app.listen(PORT, () => console.log("da local host is alive"))
