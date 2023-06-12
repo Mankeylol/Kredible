@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <div className='flex flex-row justify-between p-4'>
       <img
-        className=""
+        className=" ml-12"
         src="/Kredible.svg"
         alt="Your Company"
       />

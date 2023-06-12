@@ -6,3 +6,39 @@ body {
 background-color:#141419;
 color: white;
 }
+
+
+.grad{
+  background: linear-gradient(to right, #FF89E6 0%, #C35AFF 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+
+}
+
+.nft-bg{
+  background-image: url('Nft-bg.png');
+}
+
+.score-board{
+  background: linear-gradient(to right, rgba(255, 255, 255,0.1) , rgba(255, 255, 255, 0.08) 8%);
+  mix-blend-mode: pass-through;
+  }
+
+
+  .progressbar {
+    width: 257px;
+    height: 163px;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .progressbar::before{
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
