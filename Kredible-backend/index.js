@@ -244,7 +244,7 @@ async function calculateScore(request, response) {
 
   console.log(score)
   const data = [totalTxs, nftValue, tokensValue, stakingInfo, amountLent, amountBorrowed, nftVolume, defiBorrowingHistory ]
-  response.status(200).send(`POST request received${console.log(data)}`)
+  response.send(score.toString())
 
   async function storeData(){
     const client = new MongoClient(uri);
