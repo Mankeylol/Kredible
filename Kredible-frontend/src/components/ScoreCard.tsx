@@ -17,7 +17,7 @@ export default  function ScoreCard() {
         if (wallet.connected) {
             const getScore = {
                 method: 'POST',
-                url: 'http://localhost:8080/calculateScore',
+                url: 'https://kredible-backend-production.up.railway.app/calculateScore',
                 headers: {
                     accept: 'application/json',
                     'content-type': 'application/json',
