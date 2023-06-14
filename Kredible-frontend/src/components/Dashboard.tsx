@@ -3,6 +3,7 @@ import React from 'react'
 export default function Dashboard() {
   return (
     <>
+    <h1 className=' absolute top-[140px] right-[300px]'>The data shown here is static as it's work in progress</h1>
       <div className='w-[900px] h-[640px] bg-[#281D31] rounded-[10px] flex justify-between pl-[40px] pr-[40px] pt-[60px] ml-[40px] mt-[15px]'>
         <div className='w-[20rem] h-[500px] bg-[#141419] rounded-[10px] pl-6 pt-8 pr-8'>
           <h1 className='text-[28px] font-bold'>My Loans</h1>

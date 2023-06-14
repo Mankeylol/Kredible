@@ -16,8 +16,8 @@ export default function Navbar() {
         alt="Your Company"
       />
       <div className="flex flex-row space-x-12 p-3">
+          <ul className='cursor-pointer' onClick={() => router.push('/')}>Dashboard</ul>
           <ul className='cursor-pointer' onClick={() => router.push('/loans')}>Loans</ul>
-          <ul className='cursor-pointer' onClick={() => router.push('/perks')}>Perks</ul>
           <ul className='cursor-pointer' onClick={() => router.push('/leaderboards')}>Leaderboards</ul>
       </div>
       <div>

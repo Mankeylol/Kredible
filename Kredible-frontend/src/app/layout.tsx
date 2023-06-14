@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <meta name="viewport" content=" initial-scale=0.1"/>
         <Wallet>
         {children}
         </Wallet>
