@@ -13,21 +13,28 @@ export default  function ScoreCard() {
     const { publicKey } = useWallet()
     const [score, setScore] = useState("???")
 
+
+
     async function onclick() {
         if (wallet.connected) {
-            const getScore = {
-                method: 'POST',
-                url: 'https://kredible-backend-production.up.railway.app/calculateScore',
-                headers: {
-                    accept: 'application/json',
-                    'content-type': 'application/json',
-                },
-                data: { walletAddress: publicKey!.toString()  }
+            event?.preventDefault() 
+            try{
+                const getScore = {
+                    method: 'POST',
+                    url: 'https://kredible-backend-production.up.railway.app/calculateScore',
+                    headers: {
+                        accept: 'application/json',
+                        'content-type': 'application/json',
+                    },
+                    data: { walletAddress: publicKey!.toString()  }
+                }
+                const score = await axios.request(getScore)
+    
+                console.log(score)
+                setScore(score.data)
+            } catch (error) {
+                console.log(error)
             }
-            const score = await axios.request(getScore)
-
-            console.log(score)
-            setScore(score.data)
 
         
         }
